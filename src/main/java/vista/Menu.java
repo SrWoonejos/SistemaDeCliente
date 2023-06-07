@@ -2,30 +2,35 @@ package vista;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
+
+import modelos.Cliente;
 import servicio.ArchivoServicio;
 import servicio.ClienteServicio;
 import servicio.ExportadorCsv;
 import servicio.ExportadorTxt;
 
-public class Menu {
-	protected ClienteServicio clienteservicio;
+public class Menu extends ClienteServicio{
+
+	protected ClienteServicio clienteServicio;
 	protected ArchivoServicio archivoServicio;
 	protected ExportadorCsv exportadorCsv;
 	protected ExportadorTxt exportadorTxt;
-	private String fileName = "Cliente";
-	private String fileName1 = "DBClientes.csv";
-	private Scanner sc;
+	protected String fileName = "Cliente";
+	protected String fileName1 = "DBClientes.csv";
+	protected Scanner sc;
 
 	public Menu() {
-		clienteservicio = new ClienteServicio();
+		clienteServicio = new ClienteServicio();
 		archivoServicio = new ArchivoServicio();
 		exportadorCsv = new ExportadorCsv();
 		exportadorTxt = new ExportadorTxt();
-	
+		sc = new Scanner(System.in);
 	}
 
-	public <sc> void iniciarMenu()  {
+	public void iniciarMenu()  {
 		
+		int opcion;
+		do {
 		System.out.println("----¡Bienvenido(a) a nuestra pastelería “Bon Bon Jovi!”----");
 		System.out.println("-------MENÚ-------");
 		System.out.println("1. Listar Cliente");
@@ -36,66 +41,94 @@ public class Menu {
 		System.out.println("6. Salir");	
 		System.out.println("-------------------");	
 		System.out.println("Ingrese una opción: ");	
+		opcion = sc.nextInt();
 		
-		try (Scanner sc = new Scanner(System.in)) {
-			try {	
-				int opcion = sc.nextInt();
-			} catch (InputMismatchException e) {
-				System.out.println("Error");
-				sc.nextLine();
-			}
-		}
-		ClienteServicio clServ = new ClienteServicio();
-		int opcion;
 		switch(opcion)  {
 		case 1:
-			opcion(clienteservicio.listarCliente());
-			
+			listarCliente();			
 			break;
 		case 2:
-			opcion2();
+			agregarCliente();
 			break;
 		case 3:
-			opcion3();
+			editarCliente();
 			break;	
 		case 4:
-			opcion4();
+			cargarDatos();
 			break;
 		case 5:
+			importarDatos();
 			ExportadorTxt txt = new ExportadorTxt();
 			txt.limpiaPantalla();
 			break;
 		case 6:
-			boolean terminar = true;
+			terminarPrograma();
 			break;	
 		default;
 		System.out.println("¡Opción inválida!");
 		break;
 		}
+	} while (opcion!=6);
 	}
 
-	private void opcion1() {
-		System.out.println("1. Listar Cliente: ");
+	private void listarCliente() {
+		clienteServicio.listarCliente();
+		System.out.println("--------Datos del Cliente--------");
+		for(Cliente cliente : clienteServicio.getListaClientes())  {
+			System.out.println("Run del Cliente: " + cliente.getRunCliente());
+			System.out.println("Nombre del Cliente: " + cliente.getRunCliente());
+			System.out.println("Apellido del Cliente: " + cliente.getRunCliente());
+			System.out.println("Años como Cliente de nuestra pasteleria: " + cliente.getRunCliente());
+			System.out.println("Categoría del Cliente: " + cliente.categoriaEnum());
+		}
+	}
+
+	private void agregarCliente() {
+		clienteServicio.agregarCliente();
+		System.out.println("--------Crear Cliente--------");
+		System.out.println("Ingrese el RUN del Cliente: ");
+		String run =sc.next();
+		System.out.println("Ingrese el Nombre del Cliente: ");
+		String nombre = sc.next();
+		System.out.println("Ingrese el Apellido del Cliente: ");
+		String apellido = sc.next();
+		System.out.println("Ingrese los años que lleva como Cliente de la pasteleria: ");
+		int anios = sc.nextInt();
 		
+		Cliente cliente1 = new Cliente(run, nombre, apellido, anios);
+		Cliente nuevoCliente;
+		clienteServicio.agregarCliente(nuevoCliente);
+		System.out.println("---------------------------------------");
+	    System.out.println("Cliente agregado con éxito.");
 	}
 
-	private void opcion2() {
-		System.out.println("2. Agregar Cliente: ");
+	private void editarCliente() {
+		clienteServicio.editarCliente();
 	}
 
-	private void opcion3() {
-		System.out.println("3. Editar Cliente: ");
+	private void importarDatos() {
+		clienteServicio.cargarDatos(fileName1);
 	}
 
-	private void opcion4() {
-		System.out.println("4. Importar Datos: ");
-	}
+	private void exportarDatos() {
+		System.out.println("Seleccione el formato para exportar el archivo: ");
+		System.out.println("1. CSV ");
+		System.out.println("2. TXT ");
+		System.out.println("Mi opción es: ");
+		int opcion = sc.nextInt();
+		
+		switch (opcion)  {
+		case 1:
+			exportadorCsv.exportarCliente(clienteServicio.listarClientes(), fileName);
+			break;
+		case 2;
+		    ExportadorTxt.exportarCliente(clienteServicio.listarClientes(), fileName);
+		    break;
+		}
+		}
 
-	private void opcion5() {
-		System.out.println("5. Exportar Datos: ");
-	}
-
-	private void opcion6() {
-		System.out.println("6. Salir ");
+	private void terminarPrograma() {
+		System.out.println("¡Gracias por preferirnos! ");
+		System.exit(0);
 	}
 }

@@ -15,6 +15,7 @@ public class Cliente {
 		this.anioCliente = anioCliente;
 	}
 
+	
 	public String getRunCliente() {
 		return runCliente;
 	}
@@ -53,7 +54,7 @@ public class Cliente {
 				+ apellidoCliente + ", anioCliente=" + anioCliente + "]";
 	}
 
-	public enum categoriaEnum {
-		activo, inactivo
+	public enum categoriaEnum  {
+		ACTIVO, INACTIVO
 	}
 }

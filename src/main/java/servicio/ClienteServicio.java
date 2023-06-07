@@ -30,7 +30,6 @@ protected List<Cliente> listaClientes;
 	}
 
 	public Object listarCliente() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 }
